@@ -1,0 +1,10 @@
+name = "Create Custom Ctools Plugins as Objects"
+description = "Provides a simple OOP wrapper around ctools plugins."
+core = 7.x
+version = 7.x-1.0-dev
+package = ""
+; configure =
+
+dependencies[] = ctools
+
+files[] = classes/C3POContentTypePlugin.class.php
