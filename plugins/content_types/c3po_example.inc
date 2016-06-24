@@ -20,7 +20,7 @@ class C3POContentTypePluginC3poExample extends C3POContentTypePlugin {
 
     // Use the machine name of the plugin (the filename) as the root of your
     // settings and there is no need to explicitly call the submit handler.
-    $form['example']['custom_text'] = array(
+    $form['c3po_example']['custom_text'] = array(
       '#type' => 'textfield',
       '#title' => t('Custom Setting'),
       '#default_value' => $conf['custom_text'],
