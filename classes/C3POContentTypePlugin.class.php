@@ -240,6 +240,32 @@ class C3POContentTypePlugin {
   }
 
   /**
+   * Extract a specific context from an array of possible contexts.
+   *
+   * @param mixed $contexts
+   *   The contexts from a content_type rendering callback.
+   * @param array|string $types
+   *   The type(s) of context to find.
+   *
+   * @return object|null
+   *   The context or NULL if not found.
+   */
+  public function getContext($contexts, $types) {
+    $types = (array) $types;
+
+    foreach ($contexts as $context) {
+      if (is_array($context->type) && array_intersect($context->type, $types)) {
+        return $context;
+      }
+      elseif (is_string($context->type) && in_array($context->type, $types)) {
+        return $context;
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
    * Generate the class name given the pane subtype.
    *
    * @param string $subtype
