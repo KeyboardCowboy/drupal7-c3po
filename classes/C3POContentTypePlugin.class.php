@@ -179,10 +179,10 @@ abstract class C3POContentTypePlugin {
   /**
    * Edit form callback.
    */
-  public function editForm($form, &$form_state) {
+  public function editForm($form, &$form_state, $subtype) {
     // Preset a 'container' for custom settings.  This allows us to automate
     // things like the admin settings display and the edit form submit handler.
-    $form[$form_state['subtype_name']]['#tree'] = TRUE;
+    $form[$subtype]['#tree'] = TRUE;
 
     // Hide the text field when we are not overriding the title.
     $form['override_title_text']['#states'] = array(
@@ -197,14 +197,12 @@ abstract class C3POContentTypePlugin {
   /**
    * Edit form validate callback.
    */
-  public function editFormValidate($form, &$form_state) {}
+  public function editFormValidate($form, &$form_state, $subtype) {}
 
   /**
    * Edit form submit callback.
    */
-  public function editFormSubmit($form, &$form_state) {
-    $subtype = $form_state['subtype_name'];
-
+  public function editFormSubmit($form, &$form_state, $subtype) {
     if (isset($form_state['values'][$subtype])) {
       foreach ($form_state['values'][$subtype] as $name => $value) {
         $form_state['conf'][$name] = $value;
@@ -300,7 +298,7 @@ function c3po_ctools_content_type_render($subtype, $conf, $args, $context) {
 function c3po_ctools_content_type_edit_form($form, &$form_state) {
   $subtype = isset($form_state['subtype_name']) ? $form_state['subtype_name'] : '';
   $class = C3POContentTypePlugin::getSubtypeClass($subtype);
-  return $class::getInstance()->editForm($form, $form_state);
+  return $class::getInstance()->editForm($form, $form_state, $subtype);
 }
 
 /**
@@ -309,7 +307,7 @@ function c3po_ctools_content_type_edit_form($form, &$form_state) {
 function c3po_ctools_content_type_edit_form_validate($form, &$form_state) {
   $subtype = isset($form_state['subtype_name']) ? $form_state['subtype_name'] : '';
   $class = C3POContentTypePlugin::getSubtypeClass($subtype);
-  return $class::getInstance()->editFormValidate($form, $form_state);
+  return $class::getInstance()->editFormValidate($form, $form_state, $subtype);
 }
 
 /**
@@ -318,7 +316,7 @@ function c3po_ctools_content_type_edit_form_validate($form, &$form_state) {
 function c3po_ctools_content_type_edit_form_submit($form, &$form_state) {
   $subtype = isset($form_state['subtype_name']) ? $form_state['subtype_name'] : '';
   $class = C3POContentTypePlugin::getSubtypeClass($subtype);
-  return $class::getInstance()->editFormSubmit($form, $form_state);
+  return $class::getInstance()->editFormSubmit($form, $form_state, $subtype);
 }
 
 /**
