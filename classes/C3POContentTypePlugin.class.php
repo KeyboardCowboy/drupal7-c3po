@@ -7,7 +7,7 @@
 /**
  * Class C3POContentTypePlugin.
  */
-class C3POContentTypePlugin {
+abstract class C3POContentTypePlugin {
   // Store the plugin definition.
   protected $settings = array();
 
@@ -231,13 +231,7 @@ class C3POContentTypePlugin {
    *    - title
    *    - content
    */
-  public function render($subtype, array $conf, array $args, $context) {
-    $block = new stdClass();
-    $block->title = t("Block Title");
-    $block->content = t("Block content.");
-
-    return $block;
-  }
+  abstract public function render($subtype, array $conf, array $args, $context);
 
   /**
    * Extract a specific context from an array of possible contexts.
