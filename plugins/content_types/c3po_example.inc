@@ -15,18 +15,18 @@ class C3POContentTypePluginC3poExample extends C3POContentTypePlugin {
   /**
    * {@inheritdoc}
    */
-  public function editForm($form, &$form_state) {
+  public function editForm($form, &$form_state, $subtype) {
     $conf = $form_state['conf'];
 
     // Use the machine name of the plugin (the filename) as the root of your
     // settings and there is no need to explicitly call the submit handler.
-    $form['c3po_example']['custom_text'] = array(
+    $form[$subtype]['custom_text'] = array(
       '#type' => 'textfield',
       '#title' => t('Custom Setting'),
       '#default_value' => $conf['custom_text'],
     );
 
-    return parent::editForm($form, $form_state);
+    return parent::editForm($form, $form_state, $subtype);
   }
 
   /**

@@ -7,4 +7,5 @@ package = ""
 
 dependencies[] = ctools
 
+files[] = classes/C3POPlugin.class.php
 files[] = classes/C3POContentTypePlugin.class.php

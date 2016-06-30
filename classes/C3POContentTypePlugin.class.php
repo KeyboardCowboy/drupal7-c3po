@@ -1,35 +1,21 @@
 <?php
 /**
  * @file
- * General class to assist in objectifying ctools content_type plugins.
+ * Contains \C3POContentTypePlugin.
  */
 
 /**
- * Class C3POContentTypePlugin.
+ * General class to assist in objectifying ctools content_type plugins.
  */
-abstract class C3POContentTypePlugin {
-  // Store the plugin definition.
-  protected $settings = array();
+abstract class C3POContentTypePlugin extends C3POPlugin {
+  // Define the plugin type.
+  public static $pluginType = 'ContentType';
 
   /**
-   * C3POContentTypePlugin constructor.
+   * {@inheritdoc}
    */
-  public function __construct() {}
-
-  /**
-   * Build the plugin definition array.
-   *
-   * The plugin file should set the variable $plugin to the value returned by
-   * this method.
-   *
-   * @param array $settings
-   *   Custom definition settings for this plugin.
-   *
-   * @return array
-   *   A properly formatted $plugin definition.
-   */
-  public function plugin(array $settings = array()) {
-    $defaults = array(
+  final protected function defaultValues() {
+    return array(
       'icon' => drupal_get_path('module', 'c3po') . '/images/c3po.png',
       'title' => t("C3PO Ctools Content Type"),
       'description' => t("C3PO ctools content type description."),
@@ -42,34 +28,6 @@ abstract class C3POContentTypePlugin {
       'admin title' => "c3po_ctools_content_type_admin_title",
       'admin info' => "c3po_ctools_content_type_admin_info",
     );
-
-    // Deny all other contexts if a required context is set.
-    if (isset($settings['required context'])) {
-      $settings['all contexts'] = FALSE;
-    }
-
-    $this->settings = $settings + $defaults;
-
-    return $this->settings;
-  }
-
-  /**
-   * Instantiate and return the object.
-   *
-   * For classes that implement only static methods, such as custom module
-   * functionality, this method will allow those static methods to be written
-   * as dynamic classes and called via this static method.  This allows them
-   * to be overridden for PhpUnit testing.
-   *
-   * @return static
-   *   An instance of this class.
-   */
-  public static function getInstance() {
-    static $instance;
-    if (!isset($instance)) {
-      $instance = new static();
-    }
-    return $instance;
   }
 
   /**
@@ -257,38 +215,13 @@ abstract class C3POContentTypePlugin {
     return NULL;
   }
 
-  /**
-   * Generate the class name given the pane subtype.
-   *
-   * @param string $subtype
-   *   The pane machine name.
-   *
-   * @return string
-   *   The appropriate class name to extend this class.
-   */
-  public static function getSubtypeClass($subtype = '') {
-    $class = str_replace('_', ' ', $subtype);
-    $class = ucwords(strtolower($class));
-    $class = str_replace(' ', '', $class);
-    $class = "C3POContentTypePlugin{$class}";
-
-    if (class_exists($class)) {
-      return $class;
-    }
-    else {
-      $args = array('%class' => $class);
-      drupal_set_message(t("Class %class was not found. Make sure your plugin class name matches the pattern 'C3POContentTypePlugin[filename]'.", $args), 'error', FALSE);
-      return "C3POContentTypePlugin";
-    }
-  }
-
 }
 
 /**
  * Render callback.
  */
 function c3po_ctools_content_type_render($subtype, $conf, $args, $context) {
-  $class = C3POContentTypePlugin::getSubtypeClass($subtype);
+  $class = C3POPlugin::getSubtypeClass($subtype, C3POContentTypePlugin::$pluginType);
   return $class::getInstance()->render($subtype, $conf, $args, $context);
 }
 
@@ -297,7 +230,7 @@ function c3po_ctools_content_type_render($subtype, $conf, $args, $context) {
  */
 function c3po_ctools_content_type_edit_form($form, &$form_state) {
   $subtype = isset($form_state['subtype_name']) ? $form_state['subtype_name'] : '';
-  $class = C3POContentTypePlugin::getSubtypeClass($subtype);
+  $class = C3POPlugin::getSubtypeClass($subtype, C3POContentTypePlugin::$pluginType);
   return $class::getInstance()->editForm($form, $form_state, $subtype);
 }
 
@@ -306,7 +239,7 @@ function c3po_ctools_content_type_edit_form($form, &$form_state) {
  */
 function c3po_ctools_content_type_edit_form_validate($form, &$form_state) {
   $subtype = isset($form_state['subtype_name']) ? $form_state['subtype_name'] : '';
-  $class = C3POContentTypePlugin::getSubtypeClass($subtype);
+  $class = C3POPlugin::getSubtypeClass($subtype, C3POContentTypePlugin::$pluginType);
   return $class::getInstance()->editFormValidate($form, $form_state, $subtype);
 }
 
@@ -315,7 +248,7 @@ function c3po_ctools_content_type_edit_form_validate($form, &$form_state) {
  */
 function c3po_ctools_content_type_edit_form_submit($form, &$form_state) {
   $subtype = isset($form_state['subtype_name']) ? $form_state['subtype_name'] : '';
-  $class = C3POContentTypePlugin::getSubtypeClass($subtype);
+  $class = C3POPlugin::getSubtypeClass($subtype, C3POContentTypePlugin::$pluginType);
   return $class::getInstance()->editFormSubmit($form, $form_state, $subtype);
 }
 
@@ -323,7 +256,7 @@ function c3po_ctools_content_type_edit_form_submit($form, &$form_state) {
  * Admin title callback.
  */
 function c3po_ctools_content_type_admin_title($subtype, $conf, $context = NULL) {
-  $class = C3POContentTypePlugin::getSubtypeClass($subtype);
+  $class = C3POPlugin::getSubtypeClass($subtype, C3POContentTypePlugin::$pluginType);
   return $class::getInstance()->adminTitle($subtype, $conf, $context);
 }
 
@@ -331,6 +264,6 @@ function c3po_ctools_content_type_admin_title($subtype, $conf, $context = NULL) 
  * Admin info callback.
  */
 function c3po_ctools_content_type_admin_info($subtype, $conf, $context = NULL) {
-  $class = C3POContentTypePlugin::getSubtypeClass($subtype);
+  $class = C3POPlugin::getSubtypeClass($subtype, C3POContentTypePlugin::$pluginType);
   return $class::getInstance()->adminInfo($subtype, $conf, $context);
 }
