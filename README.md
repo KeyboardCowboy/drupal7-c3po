@@ -1,6 +1,8 @@
 # C3PO Module
 ## Create Custom Ctools Plugins as Objects
 
+_https://github.com/KeyboardCowboy/drupal7-c3po_
+
 This module places OOP wrappers around ctools plugins.  The object-oriented
 structure of a plugin gives developers the following benefits:
  
