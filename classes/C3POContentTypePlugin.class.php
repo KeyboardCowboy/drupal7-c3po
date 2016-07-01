@@ -221,7 +221,7 @@ abstract class C3POContentTypePlugin extends C3POPlugin {
  * Render callback.
  */
 function c3po_ctools_content_type_render($subtype, $conf, $args, $context) {
-  $class = C3POPlugin::getSubtypeClass($subtype, C3POContentTypePlugin::$pluginType);
+  $class = C3POPlugin::getPluginClass($subtype, C3POContentTypePlugin::$pluginType);
   return $class::getInstance()->render($subtype, $conf, $args, $context);
 }
 
@@ -230,7 +230,7 @@ function c3po_ctools_content_type_render($subtype, $conf, $args, $context) {
  */
 function c3po_ctools_content_type_edit_form($form, &$form_state) {
   $subtype = isset($form_state['subtype_name']) ? $form_state['subtype_name'] : '';
-  $class = C3POPlugin::getSubtypeClass($subtype, C3POContentTypePlugin::$pluginType);
+  $class = C3POPlugin::getPluginClass($subtype, C3POContentTypePlugin::$pluginType);
   return $class::getInstance()->editForm($form, $form_state, $subtype);
 }
 
@@ -239,7 +239,7 @@ function c3po_ctools_content_type_edit_form($form, &$form_state) {
  */
 function c3po_ctools_content_type_edit_form_validate($form, &$form_state) {
   $subtype = isset($form_state['subtype_name']) ? $form_state['subtype_name'] : '';
-  $class = C3POPlugin::getSubtypeClass($subtype, C3POContentTypePlugin::$pluginType);
+  $class = C3POPlugin::getPluginClass($subtype, C3POContentTypePlugin::$pluginType);
   return $class::getInstance()->editFormValidate($form, $form_state, $subtype);
 }
 
@@ -248,7 +248,7 @@ function c3po_ctools_content_type_edit_form_validate($form, &$form_state) {
  */
 function c3po_ctools_content_type_edit_form_submit($form, &$form_state) {
   $subtype = isset($form_state['subtype_name']) ? $form_state['subtype_name'] : '';
-  $class = C3POPlugin::getSubtypeClass($subtype, C3POContentTypePlugin::$pluginType);
+  $class = C3POPlugin::getPluginClass($subtype, C3POContentTypePlugin::$pluginType);
   return $class::getInstance()->editFormSubmit($form, $form_state, $subtype);
 }
 
@@ -256,7 +256,7 @@ function c3po_ctools_content_type_edit_form_submit($form, &$form_state) {
  * Admin title callback.
  */
 function c3po_ctools_content_type_admin_title($subtype, $conf, $context = NULL) {
-  $class = C3POPlugin::getSubtypeClass($subtype, C3POContentTypePlugin::$pluginType);
+  $class = C3POPlugin::getPluginClass($subtype, C3POContentTypePlugin::$pluginType);
   return $class::getInstance()->adminTitle($subtype, $conf, $context);
 }
 
@@ -264,6 +264,6 @@ function c3po_ctools_content_type_admin_title($subtype, $conf, $context = NULL) 
  * Admin info callback.
  */
 function c3po_ctools_content_type_admin_info($subtype, $conf, $context = NULL) {
-  $class = C3POPlugin::getSubtypeClass($subtype, C3POContentTypePlugin::$pluginType);
+  $class = C3POPlugin::getPluginClass($subtype, C3POContentTypePlugin::$pluginType);
   return $class::getInstance()->adminInfo($subtype, $conf, $context);
 }

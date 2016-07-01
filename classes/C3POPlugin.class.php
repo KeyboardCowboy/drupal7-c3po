@@ -32,12 +32,6 @@ abstract class C3POPlugin {
    *   A properly formatted $plugin definition.
    */
   public function plugin(array $settings) {
-    // Deny all other contexts if a required context is set.
-    // @todo: Is this accurate?
-    if (isset($settings['required context'])) {
-      $settings['all contexts'] = FALSE;
-    }
-
     $this->settings = $settings + $this->defaultValues();
 
     return $this->settings;
@@ -46,14 +40,14 @@ abstract class C3POPlugin {
   /**
    * Generate the class name given the pane subtype.
    *
-   * @param string $subtype
-   *   The pane machine name.
+   * @param string $name
+   *   The machine name of the plugin.
    *
    * @return string
    *   The appropriate class name to extend this class.
    */
-  public static function getSubtypeClass($subtype, $plugin_type) {
-    $class = str_replace('_', ' ', $subtype);
+  public static function getPluginClass($name, $plugin_type) {
+    $class = str_replace('_', ' ', $name);
     $class = ucwords(strtolower($class));
     $class = str_replace(' ', '', $class);
     $class = "C3PO{$plugin_type}Plugin{$class}";
@@ -64,7 +58,7 @@ abstract class C3POPlugin {
     else {
       $args = array('%class' => $class);
       drupal_set_message(t("Class %class was not found. Make sure your plugin class name matches the pattern 'C3PO{$plugin_type}Plugin[filename]'.", $args), 'error', FALSE);
-      return "C3PO{$plugin_type}Plugin";
+      return NULL;
     }
   }
 
