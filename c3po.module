@@ -2,16 +2,6 @@
 /**
  * @file
  * Drupal hooks.
+ *
+ * Required for the module to be registered.
  */
-
-/**
- * Implements hook_ctools_plugin_directory().
- */
-function c3po_ctools_plugin_directory($module, $plugin) {
-  if ($module == 'ctools' && !empty($plugin)) {
-    return "plugins/$plugin";
-  }
-  if ($module == 'page_manager' || $module == 'panels') {
-    return "plugins/$plugin";
-  }
-}

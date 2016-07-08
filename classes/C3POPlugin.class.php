@@ -8,78 +8,57 @@
  * General class to manage ctools plugins as objects.
  */
 abstract class C3POPlugin {
-  // Store the plugin definition.
-  protected $settings = array();
-
-  // Set the plugin type.
-  public static $pluginType;
+  use C3POPluginTrait;
 
   /**
-   * C3POPlugin constructor.
-   */
-  public function __construct() {}
-
-  /**
-   * Build the plugin definition array.
+   * Define the default values for a plugin.
    *
-   * The plugin file should set the variable $plugin to the value returned by
-   * this method.
-   *
-   * @param array $settings
-   *   Custom definition settings for this plugin.
+   * These can be overridden by a custom plugin.
    *
    * @return array
-   *   A properly formatted $plugin definition.
+   *   The default plugin settings.
    */
-  public function plugin(array $settings) {
-    $this->settings = $settings + $this->defaultValues();
+  abstract protected function defaultValues();
 
-    return $this->settings;
-  }
+}
+
+/**
+ * General class to extend ctools context objects.
+ */
+abstract class C3POCtoolsContext {
+  use C3POPluginTrait;
 
   /**
-   * Generate the class name given the pane subtype.
-   *
-   * @param string $name
-   *   The machine name of the plugin.
-   *
-   * @return string
-   *   The appropriate class name to extend this class.
+   * {@inheritdoc}
    */
-  public static function getPluginClass($name, $plugin_type) {
-    $class = str_replace('_', ' ', $name);
-    $class = ucwords(strtolower($class));
-    $class = str_replace(' ', '', $class);
-    $class = "C3PO{$plugin_type}Plugin{$class}";
+  //public function __construct($type = 'none', $data = NULL) {
+  //  parent::ctools_context($type, $data);
+  //}
 
-    if (class_exists($class)) {
-      return $class;
+  public function tokenReplaceConvertList($type) {
+    $list = array();
+
+    $tokens = token_info();
+    if (isset($tokens['tokens'][$type])) {
+      foreach ($tokens['tokens'][$type] as $id => $info) {
+        if (!isset($list[$id])) {
+          $list[$id] = $info['name'];
+        }
+      }
     }
-    else {
-      $args = array('%class' => $class);
-      drupal_set_message(t("Class %class was not found. Make sure your plugin class name matches the pattern 'C3PO{$plugin_type}Plugin[filename]'.", $args), 'error', FALSE);
-      return NULL;
-    }
+
+    return $list;
   }
 
-  /**
-   * Instantiate and return the object.
-   *
-   * For classes that implement only static methods, such as custom module
-   * functionality, this method will allow those static methods to be written
-   * as dynamic classes and called via this static method.  This allows them
-   * to be overridden for PhpUnit testing.
-   *
-   * @return static
-   *   An instance of this class.
-   */
-  public static function getInstance() {
-    static $instance;
-    if (!isset($instance)) {
-      $instance = new static();
+  public function tokenReplaceConvert($token_type, $context, $token_name, $options) {
+    $token_value = '';
+
+    $values = token_generate($token_type, array($token_name => $token_name), array($token_type => $context->data), $options);
+    if (isset($values[$token_name])) {
+      $token_value = $values[$token_name];
     }
 
-    return $instance;
+    return $token_value;
   }
 
   /**

@@ -1,0 +1,71 @@
+<?php
+/**
+ * @file
+ * Example usage of C3PO objects to create ctools plugins.
+ */
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function c3po_example_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'ctools' && !empty($plugin)) {
+    return "plugins/$plugin";
+  }
+  if ($module == 'page_manager' || $module == 'panels') {
+    return "plugins/$plugin";
+  }
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function c3po_example_token_info() {
+  // Define the custom token type.
+  $data['types']['c3po_example_month'] = array(
+    'name' => t("C3PO Examples"),
+    'description' => ("Example tokens to show off ctools replacements."),
+  );
+
+  // Define some custom tokens.
+  $data['tokens']['c3po_example_month']['full'] = array(
+    'name' => t("Full Name"),
+    'description' => t("The full month name."),
+  );
+  $data['tokens']['c3po_example_month']['abbrev'] = array(
+    'name' => t("Abbreviated Name"),
+    'description' => t("The abbreviated month name."),
+  );
+  $data['tokens']['c3po_example_month']['int'] = array(
+    'name' => t("Numeric"),
+    'description' => t("The numeric value of the month."),
+  );
+
+  return $data;
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function c3po_example_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $replacements = array();
+
+  if (isset($data['c3po_example_month'])) {
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'full':
+          $replacements[$original] = $data['c3po_example_month']->full;
+          break;
+
+        case 'abbrev':
+          $replacements[$original] = $data['c3po_example_month']->abbrev;
+          break;
+
+        case 'int':
+          $replacements[$original] = $data['c3po_example_month']->int;
+          break;
+      }
+    }
+  }
+
+  return $replacements;
+}

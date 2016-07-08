@@ -1,12 +1,14 @@
 name = "Create Custom Ctools Plugins as Objects"
 description = "Provides a simple OOP wrapper around ctools plugins."
 core = 7.x
-version = 7.x-1.0-dev
-package = ""
-; configure =
+version = VERSION
+package = Chaos tool suite
 
 dependencies[] = ctools
 
+files[] = classes/C3POPluginTrait.class.php
 files[] = classes/C3POPlugin.class.php
 files[] = classes/C3POAccessPlugin.class.php
+files[] = classes/C3POArgumentPlugin.class.php
 files[] = classes/C3POContentTypePlugin.class.php
+files[] = classes/C3POContextPlugin.class.php

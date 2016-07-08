@@ -1,0 +1,8 @@
+name = C3PO Example
+description = Examples for implementing C3PO ctools plugins.
+core = 7.x
+version = VERSION
+package = Chaos tool suite
+
+dependencies[] = c3po
+dependencies[] = ctools
