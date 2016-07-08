@@ -48,10 +48,6 @@ class C3POContextPlugin extends C3POCtoolsContext {
 
     // The filename minus the extension.
     $this->context->plugin = $plugin['name'];
-
-    // Would be set by the constructor when the object is instantiated.
-    //$this->type = $plugin['name'];
-
     $this->context->keyword = $plugin['keyword'];
 
     // Setup the data param for context info.
@@ -98,11 +94,37 @@ class C3POContextPlugin extends C3POCtoolsContext {
     return $value;
   }
 
+  /**
+   * Load a child plugin.
+   *
+   * In cases where the plugin has no children, return its own definition.
+   *
+   * @param array $plugin
+   *   The plugin definition.
+   * @param string $parent
+   *   The parent plugin name.
+   * @param string $child
+   *   The child plugin name.
+   *
+   * @return array
+   *   The child plugin.
+   */
   public function getChild($plugin, $parent, $child) {
     $plugins = $this->getChildren($plugin, $parent);
     return $plugins[$child];
   }
 
+  /**
+   * Load all children of a plugin.
+   *
+   * @param array $plugin
+   *   The plugin definition.
+   * @param $parent
+   *   The parent plugin's name.
+   *
+   * @return array
+   *   The child plugin definitions, including itself.
+   */
   public function getChildren($plugin, $parent) {
     $plugins = array();
     $plugins[$parent] = $plugin;

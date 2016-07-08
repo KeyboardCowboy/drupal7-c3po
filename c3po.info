@@ -12,3 +12,4 @@ files[] = classes/C3POAccessPlugin.class.php
 files[] = classes/C3POArgumentPlugin.class.php
 files[] = classes/C3POContentTypePlugin.class.php
 files[] = classes/C3POContextPlugin.class.php
+files[] = classes/C3PORelationshipPlugin.class.php
