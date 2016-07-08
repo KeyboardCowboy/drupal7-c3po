@@ -188,7 +188,7 @@ function c3po_ctools_access_restrictions($conf, &$context) {
   // function, so if you want to implement your own restrictions, you'll need
   // to override the 'restrictions' callback in your custom plugin settings
   // and map it to your own object method.
-  return C3POAccessPlugin::getInstance()->restrictions($conf, $context);
+  C3POAccessPlugin::getInstance()->restrictions($conf, $context);
 }
 
 /**
