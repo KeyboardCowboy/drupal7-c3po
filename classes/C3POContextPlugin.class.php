@@ -1,6 +1,6 @@
 <?php
 
-class C3POContextPlugin extends C3POCtoolsContext {
+class C3POContextPlugin extends C3POPlugin {
   // Define the plugin type.
   public static $pluginType = 'Context';
 
@@ -18,10 +18,7 @@ class C3POContextPlugin extends C3POCtoolsContext {
       'defaults' => array(),
       'convert list' => 'c3po_ctools_context_plugin_convert_list',
       'convert' => 'c3po_ctools_context_plugin_convert',
-      'placeholder form' => array(
-        '#type' => 'textfield',
-        '#description' => t("Provide a sample argument for the context."),
-      ),
+      'placeholder form' => 'c3po_ctools_context_placeholder_form',
       'get child' => 'c3po_ctools_context_plugin_get_child',
       'get children' => 'c3po_ctools_context_plugin_get_children',
       'no ui' => FALSE,
@@ -88,10 +85,28 @@ class C3POContextPlugin extends C3POCtoolsContext {
     $value = '';
 
     if (!empty($this->settings['token subs'])) {
-      $value = $this->tokenReplaceConvert($this->settings['token subs'], $context, $type, $options);
+      $value = $this->tokenReplaceConvert($this->settings['token subs'], $type, $context, $options);
     }
 
     return $value;
+  }
+
+  /**
+   * Configure the placeholder form for the preview tab.
+   *
+   * @param array $conf
+   *   The plugin configuration.
+   *
+   * @return array
+   *   The form field config.
+   */
+  public function placeholderForm($conf) {
+    $form = array(
+      '#type' => 'textfield',
+      '#description' => t("Provide a sample argument for the preview."),
+    );
+
+    return $form;
   }
 
   /**
@@ -129,6 +144,56 @@ class C3POContextPlugin extends C3POCtoolsContext {
     $plugins = array();
     $plugins[$parent] = $plugin;
     return $plugins;
+  }
+
+  /**
+   * Use tokens as the context replacement pattern list.
+   *
+   * @param string $type
+   *   A token type.
+   *
+   * @return array
+   *   A list of tokens.
+   */
+  protected function tokenReplaceConvertList($type) {
+    $list = array();
+
+    $tokens = token_info();
+    if (isset($tokens['tokens'][$type])) {
+      foreach ($tokens['tokens'][$type] as $id => $info) {
+        if (!isset($list[$id])) {
+          $list[$id] = $info['name'];
+        }
+      }
+    }
+
+    return $list;
+  }
+
+  /**
+   * Use tokens to convert context replacement patterns.
+   *
+   * @param string $token_type
+   *   The type of token to replace ('node', 'user', etc).
+   * @param string $token_name
+   *   The name of the individual token.
+   * @param object $context
+   *   The context containing the data for the replacement.
+   * @param array $options
+   *   Token replacement options.
+   *
+   * @return string
+   *   The replacement value for the token.
+   */
+  protected function tokenReplaceConvert($token_type, $token_name, $context, $options) {
+    $token_value = '';
+
+    $values = token_generate($token_type, array($token_name => $token_name), array($token_type => $context->data), $options);
+    if (isset($values[$token_name])) {
+      $token_value = $values[$token_name];
+    }
+
+    return $token_value;
   }
 
 }
@@ -169,6 +234,11 @@ function c3po_ctools_context_plugin_settings_form_validate($form, &$form_state) 
 function c3po_ctools_context_plugin_settings_form_submit($form, &$form_state) {
   $class = C3POPlugin::getPluginClass($form_state['conf']['name'], C3POContextPlugin::$pluginType);
   return $class::getInstance()->settingsFormSubmit($form, $form_state);
+}
+
+function c3po_ctools_context_placeholder_form($conf) {
+  $class = C3POPlugin::getPluginClass($conf['name'], C3POContextPlugin::$pluginType);
+  return $class::getInstance()->placeholderForm($conf);
 }
 
 /**

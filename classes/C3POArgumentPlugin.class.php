@@ -23,10 +23,7 @@ class C3POArgumentPlugin extends C3POPlugin {
       'keyword' => 'C3POKeyword',
       'context' => 'c3po_ctools_argument_to_context',
       'settings form' => 'c3po_ctools_argument_settings_form',
-      'placeholder form' => array(
-        '#type' => 'textfield',
-        '#description' => t("Provide a sample argument."),
-      ),
+      'placeholder form' => 'c3po_ctools_argument_placeholder_form',
       'no ui' => FALSE,
     );
   }
@@ -45,6 +42,24 @@ class C3POArgumentPlugin extends C3POPlugin {
    *   The settings form.
    */
   public function settingsForm($form, $form_state, $conf) {
+    return $form;
+  }
+
+  /**
+   * Configure the placeholder form for the preview tab.
+   *
+   * @param array $conf
+   *   The plugin configuration.
+   *
+   * @return array
+   *   The form field config.
+   */
+  public function placeholderForm($conf) {
+    $form = array(
+      '#type' => 'textfield',
+      '#description' => t("Provide a sample argument for the preview."),
+    );
+
     return $form;
   }
 }
@@ -85,7 +100,15 @@ function c3po_ctools_argument_to_context($arg = NULL, $conf = NULL, $empty = FAL
  * Settings form callback.
  */
 function c3po_ctools_argument_settings_form($form, &$form_state, $conf) {
-  $name = $form_state['page']->subtask['subtask']->arguments[$form_state['keyword']]['name'];
+  $name = $form_state['page']->subtask['subtask']->temporary_arguments[$form_state['keyword']]['name'];
   $class = C3POPlugin::getPluginClass($name, C3POArgumentPlugin::$pluginType);
   return $class::getInstance()->settingsForm($form, $form_state, $conf);
+}
+
+/**
+ * Placeholder form callback.
+ */
+function c3po_ctools_argument_placeholder_form($conf) {
+  $class = C3POPlugin::getPluginClass($conf['name'], C3POArgumentPlugin::$pluginType);
+  return $class::getInstance()->placeholderForm($conf);
 }
